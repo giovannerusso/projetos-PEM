@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <locale.h>
 #include <stdbool.h>
+#include <string.h>
 
 bool calculoDigito(int cpf[], int mult[], int N) {
 	int soma = 0, i, resto = 0;
@@ -63,6 +64,37 @@ void verificaRegiao(int cpf[]) {
 	}
 }
 
+void lerCPF(int cpf[]) {
+	char texto[50];
+	int i, j = 10;
+	
+	fgets(texto, 50, stdin);
+	
+	for (i = strlen(texto) - 1; i>=0 ; i--) {
+		if (texto[i] >= '0' && texto[i] <= '9') {
+			cpf[j] = texto[i] - '0';
+			j--;
+ 		}
+	}
+	//Preenchendo com 0 a esquerda em caso de CPF com menos de 11 dígitos
+	while (j >= 0) {
+		cpf[j] = 0;
+		j--;
+	}
+}
+
+void imprimeCPF(int cpf[]) {
+	int i;
+	printf("\n");
+	 for(i=0; i<11;i++) {
+        printf("%d", cpf[i]);
+        if (i==2 || i == 5) 
+        	printf(".");
+        if (i == 8)
+        	printf("-");
+    }
+}
+
 int main() {   
 	setlocale (LC_ALL, "Portuguese");
 	
@@ -71,15 +103,14 @@ int main() {
 	int m2[10]={11,10,9,8,7,6,5,4,3,2};
 	int i;
 	
-	printf("Entre com os 11 digitos do CPF:");
-	for(i=0;i<11;i++) {	
-		scanf("%d", &cpf[i]);
-	}
+	printf("Entre com o CPF:");
+	lerCPF(cpf);
 	
 	if (repetidos(cpf) == false && calculoDigito(cpf, m1, 9) && calculoDigito(cpf, m2, 10)) {
 		printf("\nCPF válido.");
 		printf("\nEstado de Origem: ");
 		verificaRegiao(cpf);
+		imprimeCPF(cpf);
 	}
 	else {
 		printf("\nCPF inválido.");
